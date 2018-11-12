@@ -1,9 +1,10 @@
 from get_text import get_random_text
 
 class Config:
+    header = "Everything That Happened:"
+    """ Default config """
     def __init__(self, model):
         self.model = model
-        self.header = "Everything That Happened:"
 
     def FILTER_DAYS(self) -> list:
         """Default returns all days"""
