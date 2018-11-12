@@ -8,7 +8,7 @@ class Config:
     model = model
     HEADER_SEPARATOR = '\n\n'
     CHAPTER_SEPARATOR = '\n\n'
-    SECTION_SEPARATOR = '\n*\n'
+    SECTION_SEPARATOR = '\n*\n\n'
 
     def SET_MODEL(self, model):
         self.model = model
