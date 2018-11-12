@@ -6,6 +6,9 @@ class Config:
 
     header = "Everything That Happened:"
     model = model
+    HEADER_SEPARATOR = '\n\n'
+    CHAPTER_SEPARATOR = '\n\n'
+    SECTION_SEPARATOR = '\n*\n'
 
     def SET_MODEL(self, model):
         self.model = model
@@ -33,15 +36,12 @@ class Config:
 
     def SECTION_TO_STR(self, section_list: list) -> str:
         out = self.header
-        out += '\n\n'
-        for para in section_list:
-            out += '\n'
-            out += self.PARA_TO_STR(para)
-            out += '\n'
+        out += self.HEADER_SEPARATOR
 
-        out += '*'
+        for para in section_list:
+            out += self.PARA_TO_STR(para)
+            out += self.CHAPTER_SEPARATOR
+
+        out += self.SECTION_SEPARATOR
         return out
 
-    def OUTPUT(self, input: str):
-        """ Default is to print to stdout"""
-        print(input)
