@@ -1,11 +1,11 @@
 from get_text import get_random_text
-from configs.default_config import Config
-from configs.morning_routine import MorningConfig
+from chapter_configs.default_config import Config
+from book_output_configs import default_book_output_config
 
 
-# GOAL: output only the first two things the agent does. para=2 sentences. 
+BOOK_OUTPUT_CONFIG = default_book_output_config
 
-def output_from_model(config_class):
+def output_from_model(config_class: Config) -> str:
     config: Config = config_class()
 
     days: list = config.FILTER_DAYS() # Example would be to only return first day
@@ -20,7 +20,23 @@ def output_from_model(config_class):
 
     out = config.SECTION_TO_STR(section_list)
 
-    config.OUTPUT(out)
+    return out
 
 
-output_from_model(MorningConfig)
+def output_book(book_output_config: dict, chapter_separator='\f', output_fn=None):
+    output_fn = book_output_config['output_fn']
+    chapters: list = book_output_config['chapter_configs']
+
+    ## holds the stringified chapters we derive from the chapter configs
+    chapter_string_list = []
+
+    for chapter in chapters:
+        chapter_string_list.append(output_from_model(chapter['config']))
+
+    book_str: str = chapter_separator.join(chapter_string_list)
+
+    output_fn(book_str)
+
+
+
+output_book(BOOK_OUTPUT_CONFIG)

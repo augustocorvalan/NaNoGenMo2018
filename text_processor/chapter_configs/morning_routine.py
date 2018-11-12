@@ -1,4 +1,4 @@
-from configs.default_config import Config
+from chapter_configs.default_config import Config
 from get_text import get_random_text
 
 class MorningConfig(Config):
