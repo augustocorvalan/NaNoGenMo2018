@@ -5,8 +5,13 @@ from book_output_configs import default_book_output_config
 
 BOOK_OUTPUT_CONFIG = default_book_output_config
 
-def output_from_model(config_class: Config) -> str:
-    config: Config = config_class()
+def output_from_model(chapter_config) -> str:
+    Config_class = chapter_config['config']
+    config: Config = Config_class()
+    model: dict = chapter_config.get('model')
+
+    if (model):
+        config.model = model
 
     days: list = config.FILTER_DAYS() # Example would be to only return first day
 
@@ -31,7 +36,7 @@ def output_book(book_output_config: dict, chapter_separator='\f', output_fn=None
     chapter_string_list = []
 
     for chapter in chapters:
-        chapter_string_list.append(output_from_model(chapter['config']))
+        chapter_string_list.append(output_from_model(chapter))
 
     book_str: str = chapter_separator.join(chapter_string_list)
 
