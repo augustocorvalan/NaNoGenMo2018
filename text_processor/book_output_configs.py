@@ -1,6 +1,16 @@
 from chapter_configs.default_config import Config
 from chapter_configs.morning_routine import MorningConfig
 
+from models._1_day_01 import model as model_1_01
+from models._1_day_02 import model as model_1_02
+
+from models._2_day_01 import model as model_2_01
+from models._2_day_02 import model as model_2_02
+from models._2_day_03 import model as model_2_03
+
+from models._3_day_01 import model as model_3_01
+from models._3_day_02 import model as model_3_02
+
 import datetime
     
 def output_file(input: str):
@@ -23,8 +33,12 @@ def output_stdout(input: str):
 default_book_output_config = {
     "output_fn": output_file,
     "chapter_configs": [  
-        { "config": MorningConfig },
+        { "config": MorningConfig, "model": model_1_01 },
+        { "config": MorningConfig, "model": model_1_02 },
         { "config": Config },
-        { "config": MorningConfig }
+        { "config": MorningConfig, "model": model_2_01 },
+        { "config": Config },
+        { "config": MorningConfig, "model": model_2_02 },
+        { "config": Config },
     ]
 }
