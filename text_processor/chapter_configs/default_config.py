@@ -4,7 +4,9 @@ from models.sample_model import model
 class Config:
     """ Default config """
 
+    show_headers = False
     header = "Everything That Happened:"
+
     model = model
     HEADER_SEPARATOR = '\n\n'
     CHAPTER_SEPARATOR = '\n\n'
@@ -35,8 +37,10 @@ class Config:
         return ' '.join(para_list)
 
     def SECTION_TO_STR(self, section_list: list) -> str:
-        out = self.header
-        out += self.HEADER_SEPARATOR
+        out = ''
+        if self.show_headers:
+            out = self.header
+            out += self.HEADER_SEPARATOR
 
         for para in section_list:
             out += self.PARA_TO_STR(para)
