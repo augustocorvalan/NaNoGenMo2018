@@ -1,55 +1,15 @@
-from characters.AgentCharacter import Agent 
-from characters.Character import Character
+from characters.AgentCharacter import Agent
 from typing import Dict, List
 
-
-def get_model(model_config: dict) -> dict:
-    return {
-        "days": get_days(model_config)
-    }
-
-def get_days(model_config: dict) -> list:
-    total_days: int = model_config['total_days']
+def get_days(model: Agent, total_days: int) -> dict:
     days = []
 
     for i in range(total_days):
-        day: dict = get_day(model_config)
-        days.append(day)
+        days.append(model.get_day())
 
-    return days
+    return {'days': days}
 
+if __name__ == '__main__':
+    model = get_days(model=Agent(), total_days=3)
 
-def get_day(model_config) -> dict:
-    characters: List[dict] = model_config['characters']
-    day = {}
-
-    for character in characters:
-        character_name = character['name']
-        character_controller = character['controller']
-        character_day: list = character_controller.get_day(model_config) 
-
-        day[character_name] = character_day
-
-    return day
-
-
-
-
-
-
-## CONFIG
-default_model_config = {
-    "characters":  [
-        {"name": 'agent', "controller": Character(Agent())}
-    ],
-    "total_days": 3
-}
-## CONFIG
-model = get_model(default_model_config)
-
-print(model)
-
-
-########################################
-
-
+    print(model)

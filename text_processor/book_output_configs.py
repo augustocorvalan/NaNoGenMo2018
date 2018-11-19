@@ -22,9 +22,8 @@ def output_stdout(input: str):
 
 default_book_output_config = {
     "output_fn": output_file,
-    "chapter_configs": [  
+    "chapter_configs": [
         { "config": MorningConfig },
         { "config": Config },
-        { "config": MorningConfig }
     ]
 }
