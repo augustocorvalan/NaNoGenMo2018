@@ -103,6 +103,11 @@ texts = {
 
 	"AGENT_KILLS_REV": [
 		"I put the machine over his mouth and turned it on.",
+		"I put the machine over his mouth and turned it on. It took six minutes.",
+
+		"I put the machine over his mouth and turned it on. It took fifteen minutes.",
+
+		"I put the machine over his mouth and turned it on. It took eight minutes.",
 
 		"I put the machine over his mouth and turned it on. It took six minutes.",
 
@@ -116,11 +121,6 @@ texts = {
 
 		"I went into his room at night. He was asleep. I unspooled the mask and placed it over his face. I turned on the machine. The breath became rapid and shallow. Then it couldn't be heard. It took eight minutes.",
 
-		"It took six minutes.",
-
-		"It took fifteen minutes.",
-
-		"It took eight minutes.",
 	]
 }
 

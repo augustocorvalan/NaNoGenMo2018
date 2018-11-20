@@ -39,6 +39,9 @@ default_book_output_config = {
         { "config": MorningConfig, "model": model_2_01 },
         { "config": Config },
         { "config": MorningConfig, "model": model_2_02 },
-        { "config": Config },
+        { "config": MorningConfig, "model": model_3_01 },
+        { "config": Config, "model": model_3_01 },
+        { "config": MorningConfig, "model": model_3_02 },
+        { "config": Config, "model": model_3_02 },
     ]
 }
