@@ -26,12 +26,33 @@ def output_file(input: str):
     # Close opend file
     fo.close()
 
-def output_stdout(input: str):
+
+### SINKS ###
+def terminal_sink(input: str):
     """ Default is to print to stdout"""
     print(input)
 
+def latex_sink(input: str):
+    """ outputs latex file """
+    pass
+
+
+### Formatters ###
+def star_separator_formatter(lst: list) -> str:
+    return '\n*\n'.join(lst)
+
+def unordered_list_formatter(lst: list) -> str:
+    return '\n\n'.join(lst)
+
+def new_page_formatter(lst: list) -> str:
+    return '\n###\n\n\n\n'.join(lst)
+
+
 default_book_output_config = {
-    "output_fn": output_file,
+    "output_sink": terminal_sink,
+    "chapter_list_to_string": new_page_formatter,
+    "default_paragraph_formatter": unordered_list_formatter,
+    "default_section_formatter": star_separator_formatter,
     "chapter_configs": [
         { "config": MorningConfig, "model": model_1_01 },
         { "config": MorningConfig, "model": model_1_02 },

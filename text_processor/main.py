@@ -1,47 +1,49 @@
-from get_text import get_random_text
 from chapter_configs.default_config import Config
 from book_output_configs import default_book_output_config
 
-
 BOOK_OUTPUT_CONFIG = default_book_output_config
 
-def output_from_model(chapter_config) -> str:
+def chapter_from_config(book_config, chapter_config) -> str:
+    paragraph_formatter = chapter_config['paragraph_formatter'] if 'paragraph_formatter' in chapter_config else book_config['default_paragraph_formatter']
+    section_formatter = chapter_config['section_formatter'] if 'section_formatter' in chapter_config else book_config['default_section_formatter']
+    # init config
     Config_class = chapter_config['config']
     config: Config = Config_class()
+    # set the model on the config class if specified
     model: dict = chapter_config.get('model')
-
     if (model):
         config.model = model
-
+    # get days you want
     days: list = config.FILTER_DAYS() # Example would be to only return first day
-
+    # get the paragraphs for each section
     section_list: list = []
-
     for day in days:
         para_list: list = []
+        # filter out character
         character_day: list = day[config.GET_CHARACTER()]
         para_list: list = config.GET_PARA_LIST(character_day)
-        section_list.append(para_list)
+        para_str: str = paragraph_formatter(para_list)
+        section_list.append(para_str)
+    # format section and return
+    return section_formatter(section_list)
 
-    out = config.SECTION_TO_STR(section_list)
+def get_chapters(book_config: dict) -> list:
+    chapter_configs: list = book_config['chapter_configs']
+    return [chapter_from_config(book_config, chapter_config) for chapter_config in chapter_configs]
 
-    return out
+def main(book_config):
+    """ Anything that's logic lives here! """
+    chapter_list_to_string = book_config['chapter_list_to_string']
+    output_sink = book_config['output_sink']
+    # get chapters
+    chapters: list = get_chapters(book_config)
+    # flatten out book
+    output_string: str = chapter_list_to_string(chapters) # flattens chapter list w/ separator characters
+    # output
+    output_sink(output_string) # holds the logic to output to final format 
 
+def run(mainFn, book_config):
+    """ bootstrapping goes here! """
+    mainFn(book_config)
 
-def output_book(book_output_config: dict, chapter_separator='\f', output_fn=None):
-    output_fn = book_output_config['output_fn']
-    chapters: list = book_output_config['chapter_configs']
-
-    ## holds the stringified chapters we derive from the chapter configs
-    chapter_string_list = []
-
-    for chapter in chapters:
-        chapter_string_list.append(output_from_model(chapter))
-
-    book_str: str = chapter_separator.join(chapter_string_list)
-
-    output_fn(book_str)
-
-
-
-output_book(BOOK_OUTPUT_CONFIG)
+run(main, book_config=default_book_output_config)
