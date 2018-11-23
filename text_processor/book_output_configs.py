@@ -71,34 +71,25 @@ def latex_sink(input: str):
 def star_separator_formatter(lst: list) -> str:
     return '\n*\n\n'.join(lst)
 
-def unordered_list_formatter(lst: list) -> str:
-    content = r'''
-    %s
-    \bigskip
-    '''
+def latex_unordered_list_formatter(lst: list) -> str:
+    content = r'''%s\\\\'''
 
     return ''.join(content%item for item in lst)
 
 
-def new_page_formatter(lst: list) -> str:
+def latex_new_page_formatter(lst: list) -> str:
     content = r'''
+    \section{}
     %s
     \newpage
     '''
 
     return ''.join(content%item for item in lst)
 
-def latex_new_page_formatter(lst: list) -> str:
-    return '\newpage%'.join(lst)
-
-def latex_unordered_list_formatter(lst: list) -> str:
-    return '\\ \\'.join(lst)
-
-
 alt_config = {
     "output_sink": latex_sink,
-    "chapter_list_to_string": new_page_formatter,
-    "default_paragraph_formatter": unordered_list_formatter,
+    "chapter_list_to_string": latex_new_page_formatter,
+    "default_paragraph_formatter": latex_unordered_list_formatter,
     "default_section_formatter": star_separator_formatter,
     "chapter_configs": [
         { "config": MorningConfig, "model": model_1_01 },
@@ -115,15 +106,15 @@ alt_config = {
 }
 default_book_output_config = {
     "output_sink": latex_sink,
-    "chapter_list_to_string": new_page_formatter,
-    "default_paragraph_formatter": unordered_list_formatter,
+    "chapter_list_to_string": latex_new_page_formatter,
+    "default_paragraph_formatter": latex_unordered_list_formatter,
     "default_section_formatter": star_separator_formatter,
     "chapter_configs": [
         { "config": MorningConfig, "model": model_1_01 },
         { "config": MorningConfig, "model": model_1_02 },
         { "config": MorningConfig, "model": model_1_02 },
         # TODO morning + night
-        # TODO machine description
+        # TODO machine description (break up paragraphs into individual sentences and format as ordered list)
         # TODO morning + night
         # TODO machine description
         # TODO machine description (funky formatter)
