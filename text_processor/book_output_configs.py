@@ -1,8 +1,10 @@
 from chapter_configs.default_config import Config
 from chapter_configs.morning_routine import MorningConfig
+from chapter_configs.morning_night_routine import MorningNightConfig 
 
 from models._1_day_01 import model as model_1_01
 from models._1_day_02 import model as model_1_02
+from models._1_day_03 import model as model_1_03
 
 from models._2_day_01 import model as model_2_01
 from models._2_day_02 import model as model_2_02
@@ -37,7 +39,7 @@ def output_file(input: str, format='.txt'):
 
 
 ### SINKS ###
-def terminal_sink(input: str):
+def log_sink(input: str):
     """ Default is to print to stdout"""
     print(input)
 
@@ -70,6 +72,12 @@ def latex_sink(input: str):
 ### Formatters ###
 def star_separator_formatter(lst: list) -> str:
     return '\n*\n\n'.join(lst)
+
+def unordered_list_formatter(lst: list) -> str:
+    return '\n\n'.join(lst)
+
+def new_page_formatter(lst: list) -> str:
+    return '\n\n&&&&&&\n\n'.join(lst)
 
 def latex_unordered_list_formatter(lst: list) -> str:
     content = r'''%s\\\\'''
@@ -104,7 +112,8 @@ alt_config = {
         { "config": Config, "model": model_3_02 },
     ]
 }
-default_book_output_config = {
+
+latex_book_output_config = {
     "output_sink": latex_sink,
     "chapter_list_to_string": latex_new_page_formatter,
     "default_paragraph_formatter": latex_unordered_list_formatter,
@@ -114,10 +123,34 @@ default_book_output_config = {
         { "config": MorningConfig, "model": model_1_02 },
         { "config": MorningConfig, "model": model_1_02 },
         # TODO morning + night
+        { "config": MorningNightConfig, "model": model_1_01 },
         # TODO machine description (break up paragraphs into individual sentences and format as ordered list)
         # TODO morning + night
         # TODO machine description
         # TODO machine description (funky formatter)
-
     ]
 }
+
+log_book_output_config = {
+    "output_sink": log_sink,
+    "chapter_list_to_string": new_page_formatter,
+    "default_paragraph_formatter": unordered_list_formatter,
+    "default_section_formatter": star_separator_formatter,
+    "chapter_configs": [
+        { "config": MorningConfig, "model": model_1_01 },
+        { "config": MorningConfig, "model": model_1_01 },
+        { "config": MorningConfig, "model": model_1_01 },
+        # TODO morning + night
+        { "config": MorningNightConfig, "model": model_1_03 },
+        { "config": MorningNightConfig, "model": model_1_03 },
+        { "config": MorningNightConfig, "model": model_1_01 },
+        { "config": MorningNightConfig, "model": model_1_01 },
+        # TODO machine description (break up paragraphs into individual sentences and format as ordered list)
+        # TODO morning + night
+        # TODO machine description
+        # TODO machine description (funky formatter)
+    ]
+}
+
+default_book_output_config = log_book_output_config
+#default_book_output_config = latex_book_output_config 
