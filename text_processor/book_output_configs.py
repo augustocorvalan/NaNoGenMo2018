@@ -13,10 +13,19 @@ from models._3_day_02 import model as model_3_02
 
 import datetime
 
-def output_file(input: str):
-    # Open a file
+import os
+import subprocess
+
+
+def get_file_name(format='.txt') -> str:
     current_time = str(datetime.datetime.now())
-    output_folder = 'text_processor/generated_files/'
+    output_folder = './text_processor/generated_files/'
+    file_name = os.path.abspath(output_folder) + '/' + current_time + format
+    return file_name
+
+def output_file(input: str, format='.txt'):
+    current_time = str(datetime.datetime.now())
+    output_folder = './text_processor/generated_files/'
     #output_folder =''
     file_name = output_folder + current_time + '.txt'
 
@@ -34,22 +43,59 @@ def terminal_sink(input: str):
 
 def latex_sink(input: str):
     """ outputs latex file """
-    pass
+
+    content = r'''
+    \documentclass{article}
+    \begin{document}
+    %s
+    \end{document}
+    '''     
+
+    file_name = get_file_name(format='.tex')
+    print('FILE NAME!', file_name)
+    with open(file_name,'w') as f:
+        f.write(content%input)
+
+    cmd = ['pdflatex', '-interaction', 'nonstopmode', file_name]
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
+
+    retcode = proc.returncode
+    if not retcode == 0:
+        raise ValueError('Error {} executing command: {}'.format(retcode, ' '.join(cmd))) 
+
+    os.unlink(file_name)
 
 
 ### Formatters ###
 def star_separator_formatter(lst: list) -> str:
-    return '\n*\n'.join(lst)
+    return '\n*\n\n'.join(lst)
 
 def unordered_list_formatter(lst: list) -> str:
-    return '\n\n'.join(lst)
+    content = r'''
+    %s
+    \bigskip
+    '''
+
+    return ''.join(content%item for item in lst)
+
 
 def new_page_formatter(lst: list) -> str:
-    return '\n###\n\n\n\n'.join(lst)
+    content = r'''
+    %s
+    \newpage
+    '''
 
+    return ''.join(content%item for item in lst)
+
+def latex_new_page_formatter(lst: list) -> str:
+    return '\newpage%'.join(lst)
+
+def latex_unordered_list_formatter(lst: list) -> str:
+    return '\\ \\'.join(lst)
 
 default_book_output_config = {
-    "output_sink": terminal_sink,
+    "output_sink": latex_sink,
     "chapter_list_to_string": new_page_formatter,
     "default_paragraph_formatter": unordered_list_formatter,
     "default_section_formatter": star_separator_formatter,
