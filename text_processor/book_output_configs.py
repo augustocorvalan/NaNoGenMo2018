@@ -94,7 +94,8 @@ def latex_new_page_formatter(lst: list) -> str:
 def latex_unordered_list_formatter(lst: list) -> str:
     return '\\ \\'.join(lst)
 
-default_book_output_config = {
+
+alt_config = {
     "output_sink": latex_sink,
     "chapter_list_to_string": new_page_formatter,
     "default_paragraph_formatter": unordered_list_formatter,
@@ -110,5 +111,22 @@ default_book_output_config = {
         { "config": Config, "model": model_3_01 },
         { "config": MorningConfig, "model": model_3_02 },
         { "config": Config, "model": model_3_02 },
+    ]
+}
+default_book_output_config = {
+    "output_sink": latex_sink,
+    "chapter_list_to_string": new_page_formatter,
+    "default_paragraph_formatter": unordered_list_formatter,
+    "default_section_formatter": star_separator_formatter,
+    "chapter_configs": [
+        { "config": MorningConfig, "model": model_1_01 },
+        { "config": MorningConfig, "model": model_1_02 },
+        { "config": MorningConfig, "model": model_1_02 },
+        # TODO morning + night
+        # TODO machine description
+        # TODO morning + night
+        # TODO machine description
+        # TODO machine description (funky formatter)
+
     ]
 }
