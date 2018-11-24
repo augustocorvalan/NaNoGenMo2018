@@ -10,6 +10,6 @@ def get_days(model: Agent, total_days: int) -> dict:
     return {'days': days}
 
 if __name__ == '__main__':
-    model = get_days(model=Agent(), total_days=3)
+    model = get_days(model=Agent(), total_days=1)
 
     print(model)
