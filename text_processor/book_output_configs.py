@@ -5,6 +5,8 @@ from chapter_configs.morning_night_routine import MorningNightConfig
 from models._1_day_01 import model as model_1_01
 from models._1_day_02 import model as model_1_02
 from models._1_day_03 import model as model_1_03
+from models._1_day_04 import model as model_1_04
+from models._1_day_05 import model as model_1_05
 
 from models._2_day_01 import model as model_2_01
 from models._2_day_02 import model as model_2_02
@@ -120,10 +122,20 @@ latex_book_output_config = {
     "default_section_formatter": star_separator_formatter,
     "chapter_configs": [
         { "config": MorningConfig, "model": model_1_01 },
-        { "config": MorningConfig, "model": model_1_02 },
-        { "config": MorningConfig, "model": model_1_02 },
+        { "config": MorningConfig, "model": model_1_01 },
+        { "config": MorningConfig, "model": model_1_01 },
         # TODO morning + night
+        { "config": MorningNightConfig, "model": model_1_03 },
+        { "config": MorningNightConfig, "model": model_1_03 },
         { "config": MorningNightConfig, "model": model_1_01 },
+        { "config": MorningNightConfig, "model": model_1_01 },
+        # TODO morning + discover surveillance + night 
+        { "config": Config, "model": model_1_04 },
+        { "config": Config, "model": model_1_05 },
+        # TODO morning + afternoon + night 
+        # TODO morning + afternoon + night 
+        # TODO morning + afternoon + discover surveillance + night 
+
         # TODO machine description (break up paragraphs into individual sentences and format as ordered list)
         # TODO morning + night
         # TODO machine description
@@ -145,6 +157,15 @@ log_book_output_config = {
         { "config": MorningNightConfig, "model": model_1_03 },
         { "config": MorningNightConfig, "model": model_1_01 },
         { "config": MorningNightConfig, "model": model_1_01 },
+        # TODO morning + discover surveillance + night 
+        { "config": Config, "model": model_1_04 },
+        { "config": Config, "model": model_1_04 },
+        { "config": Config, "model": model_1_05 },
+        { "config": Config, "model": model_1_05 },
+        # TODO morning + afternoon + night 
+        # TODO morning + afternoon + night 
+        # TODO morning + afternoon + discover surveillance + night 
+
         # TODO machine description (break up paragraphs into individual sentences and format as ordered list)
         # TODO morning + night
         # TODO machine description
@@ -152,5 +173,5 @@ log_book_output_config = {
     ]
 }
 
-default_book_output_config = log_book_output_config
-#default_book_output_config = latex_book_output_config 
+#default_book_output_config = log_book_output_config
+default_book_output_config = latex_book_output_config 
