@@ -1,27 +1,28 @@
-from chapter_configs.default_config import Config
+from models.sample_model import model as sample_model
 from book_output_configs import default_book_output_config
+from get_text import get_random_text
 
 BOOK_OUTPUT_CONFIG = default_book_output_config
 
 def chapter_from_config(book_config, chapter_config) -> str:
     paragraph_formatter = chapter_config['paragraph_formatter'] if 'paragraph_formatter' in chapter_config else book_config['default_paragraph_formatter']
     section_formatter = chapter_config['section_formatter'] if 'section_formatter' in chapter_config else book_config['default_section_formatter']
-    # init config
-    Config_class = chapter_config['config']
-    config: Config = Config_class()
-    # set the model on the config class if specified
-    model: dict = chapter_config.get('model')
-    if (model):
-        config.model = model
-    # get days you want
-    days: list = config.FILTER_DAYS() # Example would be to only return first day
+    include_actions = chapter_config['include_actions'] if 'include_actions' in chapter_config else []
+    # get the model
+    model = chapter_config['model'] if 'model' in chapter_config else sample_model
+    # get days you want from the model
+    days = chapter_config['days'] if 'days' in chapter_config else model["days"]
     # get the paragraphs for each section
+
     section_list: list = []
     for day in days:
-        para_list: list = []
         # filter out character
-        character_day: list = day[config.GET_CHARACTER()]
-        para_list: list = config.GET_PARA_LIST(character_day)
+        character_day = day['agent'] # TODO hardcoded for now
+        # get the action names
+        action_names = [action['action_name'] for action in character_day]
+        # get text for each action in character's day
+        para_list = [get_random_text(action) for action in action_names if action in include_actions]
+        # add paragraph to section
         para_str: str = paragraph_formatter(para_list)
         section_list.append(para_str)
     # format section and return

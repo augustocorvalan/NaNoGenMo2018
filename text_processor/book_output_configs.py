@@ -8,6 +8,9 @@ from models._1_day_03 import model as model_1_03
 from models._1_day_04 import model as model_1_04
 from models._1_day_05 import model as model_1_05
 
+from models._1_day_11 import model as model_1_11
+from models._1_day_12 import model as model_1_12
+
 from models._2_day_01 import model as model_2_01
 from models._2_day_02 import model as model_2_02
 from models._2_day_03 import model as model_2_03
@@ -96,24 +99,24 @@ def latex_new_page_formatter(lst: list) -> str:
 
     return ''.join(content%item for item in lst)
 
-alt_config = {
-    "output_sink": latex_sink,
-    "chapter_list_to_string": latex_new_page_formatter,
-    "default_paragraph_formatter": latex_unordered_list_formatter,
-    "default_section_formatter": star_separator_formatter,
-    "chapter_configs": [
-        { "config": MorningConfig, "model": model_1_01 },
-        { "config": MorningConfig, "model": model_1_02 },
-        { "config": Config },
-        { "config": MorningConfig, "model": model_2_01 },
-        { "config": Config },
-        { "config": MorningConfig, "model": model_2_02 },
-        { "config": MorningConfig, "model": model_3_01 },
-        { "config": Config, "model": model_3_01 },
-        { "config": MorningConfig, "model": model_3_02 },
-        { "config": Config, "model": model_3_02 },
-    ]
-}
+
+MORNING_ACTIONS = [
+    'AGENT_WAKES',
+    'AGENT_USES_BATHROOM',
+    'AGENT_OBSERVES_SELF'
+]
+AFTERNOON_ACTIONS = [
+    'AGENT_EATS',
+    'AGENT_EXERCISES',
+]
+NIGHT_ACTIONS = [
+    'AGENT_SLEEPS',
+    'AGENT_DREAMS'
+]
+SURVEILLANCE_ACTIONS = [
+    'AGENT_DISCOVERS_SURVEILLANCE',
+]
+
 
 latex_book_output_config = {
     "output_sink": latex_sink,
@@ -121,25 +124,31 @@ latex_book_output_config = {
     "default_paragraph_formatter": latex_unordered_list_formatter,
     "default_section_formatter": star_separator_formatter,
     "chapter_configs": [
-        { "config": MorningConfig, "model": model_1_01 },
-        { "config": MorningConfig, "model": model_1_01 },
-        { "config": MorningConfig, "model": model_1_01 },
-        # TODO morning + night
-        { "config": MorningNightConfig, "model": model_1_03 },
-        { "config": MorningNightConfig, "model": model_1_03 },
-        { "config": MorningNightConfig, "model": model_1_01 },
-        { "config": MorningNightConfig, "model": model_1_01 },
-        # TODO morning + discover surveillance + night 
-        { "config": Config, "model": model_1_04 },
-        { "config": Config, "model": model_1_05 },
-        # TODO morning + afternoon + night 
-        # TODO morning + afternoon + night 
-        # TODO morning + afternoon + discover surveillance + night 
+        # morning config, day 1
+        { "include_actions": MORNING_ACTIONS, "model": model_1_11 },
+        # morning night config, day 1
+        { "include_actions": MORNING_ACTIONS + NIGHT_ACTIONS, "model": model_1_11 },
+        # morning night surveillance config, day 1
+        { "include_actions": MORNING_ACTIONS + SURVEILLANCE_ACTIONS + NIGHT_ACTIONS, "model": model_1_11 },
+
+        # night
+        { "include_actions": NIGHT_ACTIONS, "model": model_1_11 },
+
+        # morning config, day 2
+        { "include_actions": MORNING_ACTIONS, "model": model_1_12 },
+        # morning afternoon night config, day 2
+        { "include_actions": MORNING_ACTIONS + NIGHT_ACTIONS, "model": model_1_12 },
+        # morning afternoon surveillance night config, day 2
+        { "include_actions": MORNING_ACTIONS + SURVEILLANCE_ACTIONS + NIGHT_ACTIONS, "model": model_1_12 },
+
+        # night
+        { "include_actions": NIGHT_ACTIONS, "model": model_1_12 },
 
         # TODO machine description (break up paragraphs into individual sentences and format as ordered list)
         # TODO morning + night
         # TODO machine description
         # TODO machine description (funky formatter)
+
     ]
 }
 
@@ -149,22 +158,31 @@ log_book_output_config = {
     "default_paragraph_formatter": unordered_list_formatter,
     "default_section_formatter": star_separator_formatter,
     "chapter_configs": [
-        { "config": MorningConfig, "model": model_1_01 },
-        { "config": MorningConfig, "model": model_1_01 },
-        { "config": MorningConfig, "model": model_1_01 },
-        # TODO morning + night
-        { "config": MorningNightConfig, "model": model_1_03 },
-        { "config": MorningNightConfig, "model": model_1_03 },
-        { "config": MorningNightConfig, "model": model_1_01 },
-        { "config": MorningNightConfig, "model": model_1_01 },
-        # TODO morning + discover surveillance + night 
-        { "config": Config, "model": model_1_04 },
-        { "config": Config, "model": model_1_04 },
-        { "config": Config, "model": model_1_05 },
-        { "config": Config, "model": model_1_05 },
-        # TODO morning + afternoon + night 
-        # TODO morning + afternoon + night 
-        # TODO morning + afternoon + discover surveillance + night 
+        # morning config, day 1
+        { "include_actions": MORNING_ACTIONS, "model": model_1_11 },
+        # morning night config, day 1
+        { "include_actions": MORNING_ACTIONS + NIGHT_ACTIONS, "model": model_1_11 },
+        # morning night surveillance config, day 1
+        { "include_actions": MORNING_ACTIONS + SURVEILLANCE_ACTIONS + NIGHT_ACTIONS, "model": model_1_11 },
+
+        # night
+        { "include_actions": NIGHT_ACTIONS, "model": model_1_11 },
+
+        # morning config, day 2
+        { "include_actions": MORNING_ACTIONS, "model": model_1_12 },
+        # morning afternoon night config, day 2
+        { "include_actions": MORNING_ACTIONS + NIGHT_ACTIONS, "model": model_1_12 },
+        # morning afternoon surveillance night config, day 2
+        { "include_actions": MORNING_ACTIONS + SURVEILLANCE_ACTIONS + NIGHT_ACTIONS, "model": model_1_12 },
+
+        # night
+        { "include_actions": NIGHT_ACTIONS, "model": model_1_12 },
+
+        # dream, model 2, format no pagebreak
+        # morning, night, dream, model 2
+
+
+
 
         # TODO machine description (break up paragraphs into individual sentences and format as ordered list)
         # TODO morning + night
@@ -172,6 +190,9 @@ log_book_output_config = {
         # TODO machine description (funky formatter)
     ]
 }
+
+
+
 
 #default_book_output_config = log_book_output_config
 default_book_output_config = latex_book_output_config 

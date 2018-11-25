@@ -282,13 +282,18 @@ rules = {
 	"AGENT_DISCOVERS_SURVEILLANCE": [
 		"The telephone still didn't work. When I tried to call I heard a click, as if someone else was listening.",
 		"I opened a drawer and found a small tape recorder, still running.",
-		"The lamp won't turn on but from inside comes a noise like a tape recorder.",
+		"The lamp wouldn't turn on but from inside came a noise like a tape recorder.",
 		"My papers were all out of order as if someone had read them while I slept"
 	],
 
 	## AGENT_SLEEPS ##
 	"AGENT_SLEEPS": [
 		"I fell asleep."
+	],
+
+	## AGENT_DREAMS ##
+	"AGENT_DREAMS": [
+		"I had a dream about a hallway."
 	],
 
 	## AGENT_KILLS_REV ##
