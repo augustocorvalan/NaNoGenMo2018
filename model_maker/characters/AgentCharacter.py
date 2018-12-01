@@ -10,7 +10,9 @@ from DayTicker import DayTicker
 class Agent(object):
 
     neg_states = [
+        'AGENT_DESCRIBES_MACHINE',
         'AGENT_DISCOVERS_SURVEILLANCE',
+        'AGENT_OBSERVES_REV'
     ]
 
     states = neg_states + [
@@ -25,8 +27,14 @@ class Agent(object):
         'AGENT_EATS',
         'AGENT_EXERCISES',
 
+        'AGENT_OBSERVES_REV',
+        'AGENT_OBSERVES_SPACE',
+
         'AGENT_SLEEPS',
         'AGENT_DREAMS',
+
+        'AGENT_WAKES_IN_THE_NIGHT',
+        'AGENT_KILLS_REV',
 
         'remembering',
         'examine_weapon',
@@ -34,12 +42,11 @@ class Agent(object):
         'pos_interaction_rev',
         'neg_interaction_rev',
         'break',
-        'AGENT_KILLS_REV',
         'AGENT_NIGHTMARES'
     ]
 
     transitions = [
-        { 'trigger': 'wake_up', 'source': '*', 'dest': 'AGENT_WAKES'},
+        { 'trigger': 'wake_up', 'source': '*', 'dest': 'AGENT_WAKES', 'conditions': ['day_begins']},
         ### after waking up the agent wants to clean himself if they're dirty
         { 'trigger': 'next_action', 'source': 'AGENT_WAKES', 'dest': 'AGENT_USES_BATHROOM', 'conditions': ['is_dirty']},
         ### if he's ont dirty he may want to observe himself if they're feelingn thoughtful
@@ -50,14 +57,20 @@ class Agent(object):
         ### what else does they do? eat, exercise
         { 'trigger': 'next_action', 'dest': 'AGENT_EATS', 'source': neg_states + ['AGENT_WRITES_REPORT', 'AGENT_RECEIVES_DIRECTION', 'AGENT_EXERCISES'], 'conditions': ['coin_flip', 'is_hungry']},
         { 'trigger': 'next_action', 'dest': 'AGENT_EXERCISES', 'source': neg_states + ['AGENT_WRITES_REPORT', 'AGENT_RECEIVES_DIRECTION', 'AGENT_EATS'], 'conditions': ['coin_flip'], 'unless': 'has_exercised'},
-        # { 'trigger': 'next_action', 'dest': 'exercise', 'source': ['observing', 'using_bathroom', 'pos_interaction_rev'], 'conditions': ['fifty_p']},
+        ### If they don't eat or exercise they will look around ###
+        { 'trigger': 'next_action', 'source': neg_states + ['AGENT_OBSERVES_SELF', 'AGENT_USES_BATHROOM', 'AGENT_OBSERVES_SPACE'], 'dest': 'AGENT_OBSERVES_SPACE', 'conditions': ['coin_flip']},
 
         ### sweet sleep
-        { 'trigger': 'next_action', 'dest': 'AGENT_SLEEPS', 'source': ['AGENT_EATS', 'AGENT_EXERCISES', 'AGENT_DISCOVERS_SURVEILLANCE'], 'conditions': ['coin_flip']},
+        { 'trigger': 'next_action', 'dest': 'AGENT_SLEEPS', 'source': ['AGENT_EATS', 'AGENT_EXERCISES', 'AGENT_DISCOVERS_SURVEILLANCE', 'AGENT_OBSERVES_SPACE'], 'conditions': ['coin_flip']},
         { 'trigger': 'next_action', 'dest': 'AGENT_DREAMS', 'source': ['AGENT_SLEEPS'], 'conditions': ['coin_flip']},
+        { 'trigger': 'next_action', 'dest': 'AGENT_WAKES_IN_THE_NIGHT', 'source': ['AGENT_SLEEPS', 'AGENT_DREAMS'], 'conditions': ['can_agent_wake_in_the_night']},
+        { 'trigger': 'next_action', 'dest': 'AGENT_KILLS_REV', 'source': ['AGENT_WAKES_IN_THE_NIGHT'], 'conditions': ['coin_flip']},
 
+        ### at any point during the day the agent has a chance to spy on the rev 
+        # { 'trigger': 'next_action', 'dest': 'AGENT_DESCRIBES_MACHINE', 'source': neg_states + ['AGENT_EXERCISES', 'AGENT_WRITES_REPORT', 'AGENT_RECEIVES_DIRECTION'], 'conditions': ['will_neg_event_happen'], 'unless': ['has_killed']},
+        # { 'trigger': 'next_action', 'dest': 'AGENT_OBSERVES_REV', 'source': neg_states + ['AGENT_EXERCISES', 'AGENT_RECEIVES_DIRECTION'], 'conditions': ['will_neg_event_happen'], 'unless': ['has_killed']},
         ### at any point during the day the agent has a chance to discover surveillance device
-        { 'trigger': 'next_action', 'dest': 'AGENT_DISCOVERS_SURVEILLANCE', 'source': '*', 'conditions': ['will_neg_event_happen']},
+        # { 'trigger': 'next_action', 'dest': 'AGENT_DISCOVERS_SURVEILLANCE', 'source': neg_states + ['AGENT_OBSERVES_SELF', 'AGENT_OBSERVES_SPACE'], 'conditions': ['will_neg_event_happen'], 'unless': ['has_killed']},
 
 
         # certain triggers will make the agent remember his past in the agency
@@ -108,9 +121,7 @@ class Agent(object):
 
         # while the day still has hours...
         while(day_ticker.has_next_tick()):
-            # model takes next action (if any)
-            if (not self.state == 'AGENT_DREAMS' and not self.state == 'AGENT_SLEEPS'):
-                self.next_action()
+            self.next_action()
             # another tick of the clock has passed
             day_ticker.mark_next_tick()
 
@@ -125,6 +136,8 @@ class Agent(object):
     # CONDITIONS
     def coin_flip(self) -> bool:
         return random.random() < 0.5
+    def day_begins(self) -> bool:
+        return not self.has_taken_action('AGENT_WAKES')
     def feels_thoughtful(self) -> bool:
         """ flip of a coin for the moment """
         return random.random() < 0.5
@@ -137,10 +150,21 @@ class Agent(object):
         """ Agent is hungry if he hasn't eaten enough meals """
         return self.appetite > self.meals_eaten
     def will_neg_event_happen(self) -> bool:
-        """ Currently, 1/5 chance """
+        """ can only happen once per day """
         has_neg_event_happened = any(self.has_taken_action(action) for action in self.neg_states)
         #has_neg_event_happened = neg_events.any(self.has_taken_action)
-        return not has_neg_event_happened and random.random() > 0.2 # TODO make this based on past events
+        return not self.has_killed() and not has_neg_event_happened and random.random() > 0.5 # TODO make this based on past events
+    is_agent_deep_sleep = False
+    def can_agent_wake_in_the_night(self) -> bool:
+        print(self.is_agent_deep_sleep)
+        will_agent_wake = not self.is_agent_deep_sleep and random.random() < 0.25
+        self.is_agent_deep_sleep = True
+        print(self.is_agent_deep_sleep)
+        print('can agent wake', will_agent_wake)
+        return will_agent_wake
+
+    def has_killed(self) -> bool:
+        return self.has_taken_action('AGENT_KILLS_REV')
 
     # HYGIENCE STUFF
     def gets_clean(self):

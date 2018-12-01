@@ -7,7 +7,7 @@ BOOK_OUTPUT_CONFIG = default_book_output_config
 def chapter_from_config(book_config, chapter_config) -> str:
     paragraph_formatter = chapter_config['paragraph_formatter'] if 'paragraph_formatter' in chapter_config else book_config['default_paragraph_formatter']
     section_formatter = chapter_config['section_formatter'] if 'section_formatter' in chapter_config else book_config['default_section_formatter']
-    include_actions = chapter_config['include_actions'] if 'include_actions' in chapter_config else []
+    include_actions = chapter_config['include_actions'] if 'include_actions' in chapter_config else None
     # get the model
     model = chapter_config['model'] if 'model' in chapter_config else sample_model
     # get days you want from the model
@@ -21,7 +21,10 @@ def chapter_from_config(book_config, chapter_config) -> str:
         # get the action names
         action_names = [action['action_name'] for action in character_day]
         # get text for each action in character's day
-        para_list = [get_random_text(action) for action in action_names if action in include_actions]
+        if include_actions:
+            para_list = [get_random_text(action) for action in action_names if action in include_actions]
+        else:
+            para_list = [get_random_text(action) for action in action_names]
         # add paragraph to section
         para_str: str = paragraph_formatter(para_list)
         section_list.append(para_str)
