@@ -6,5 +6,4 @@ The [finite-state machine](https://github.com/augustocorvalan/NaNoGenMo2018/blob
 
 # Sample Novel
 
-[Here!](https://github.com/augustocorvalan/NaNoGenMo2018/blob/master/text_processor/generated_files/2018-11-30 21/38/15.577787.pdf)
-
+[_The Hallway_](https://github.com/augustocorvalan/NaNoGenMo2018/blob/master/text_processor/generated_files/2018-11-30%2022:02:08.912507.pdf), a type of detective novel.
