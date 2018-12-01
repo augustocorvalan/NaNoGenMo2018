@@ -68,7 +68,7 @@ def latex_sink(input: str):
     \begin{titlepage}
     \centering
     \begin{center}
-    {\huge\bfseries Today Tomorrow Yesterday \par}
+    {\huge\bfseries The Hallway \par}
     \end{center}
     \vspace{2cm}
     {\Large\itshape Augusto Corvalan\par}
