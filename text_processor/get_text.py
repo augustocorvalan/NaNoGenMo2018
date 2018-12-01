@@ -584,7 +584,7 @@ rules = {
 	],
 	"rev_dies": [
 		"Their breath slowed. Their breath stopped.",
-		"The breath became rapid and shallow. Then it couldn't be heard."
+		"The breath became rapid and shallow. Then it couldn't be heard.",
 		"The breath became rapid and shallow. Then it slowed. Then it couldn't be heard."
 	],
 	 "agent_preps_machine": [

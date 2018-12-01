@@ -349,12 +349,12 @@ chapter_configs = [
     { "include_actions": ['AGENT_WAKES'], "model": model_1_12 },
     { "include_actions": ['AGENT_WAKES'], "model": model_1_12 },
     { "include_actions": ['AGENT_WAKES'], "model": model_1_12 },
-    { "include_actions": NIGHT_ACTIONS, "model": model_1_11 },
-    { "include_actions": NIGHT_ACTIONS, "model": model_1_11 },
-    { "include_actions": NIGHT_ACTIONS, "model": model_1_11 },
     { "include_actions": ['AGENT_WAKES'], "model": model_1_12 },
     { "include_actions": ['AGENT_WAKES'], "model": model_1_12 },
     { "include_actions": ['AGENT_WAKES'], "model": model_1_12 },
+    { "include_actions": NIGHT_ACTIONS, "model": model_1_11 },
+    { "include_actions": NIGHT_ACTIONS, "model": model_1_11 },
+    { "include_actions": NIGHT_ACTIONS, "model": model_1_11 },
     { "include_actions": NIGHT_ACTIONS, "model": model_1_12 },
     # END PART 7 #
 
